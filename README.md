@@ -10,9 +10,9 @@ Live honeypot threat intelligence and automated triage lab. A public-facing T-Po
 
 ## Overview
 
-My earlier labs focused on Active Directory telemetry, endpoint forensics, and cloud detection engineering. This project extends that work into live threat intelligence by exposing a controlled honeypot environment to the public internet and capturing real attacker behavior instead of only simulated activity.
+My earlier labs focused on Active Directory telemetry, endpoint forensics, and cloud detection engineering. This project extends that work into live threat intelligence: exposing a controlled honeypot environment to the public internet and capturing real attacker behavior instead of only simulated activity, then automating first-pass triage by enriching events with MITRE ATT&CK context.
 
-The goal was to build a small SOC-style pipeline: collect raw attack telemetry, index it in Splunk, add high-confidence deception signals, and automate first-pass triage by enriching events with MITRE ATT&CK context.
+The goal was a small SOC-style pipeline: collect raw attack telemetry, index it in Splunk, add high-confidence deception signals, and automate triage end to end, from raw internet attacks to structured, analyst-ready intelligence written back into Splunk.
 
 ## Architecture
 
@@ -114,7 +114,7 @@ Raw honeypot logs are useful, but they include a lot of scanner noise. To add a 
 
 <p align="center"><img src="files/Screenshot%202026-07-13%20165302.png" width="760"></p>
 
-Token values in the screenshot above are redacted. Even fake credentials and Canarytoken URLs are not published, since a public repo makes the bait discoverable by anyone — not just an attacker who has actually compromised the host — which burns the token and generates false alerts.
+Token values in the screenshot above are redacted. Even fake credentials and Canarytoken URLs are not published, since a public repo makes the bait discoverable by anyone, not just an attacker who has actually compromised the host, which burns the token and generates false alerts.
 
 ## 7. LLM MITRE ATT&CK Classifier
 
@@ -181,11 +181,4 @@ This reinforced the core lesson of the project: exposed public infrastructure is
 - **Resize instead of forcing 8GB to work.** Splunk plus a full honeypot suite needed more memory. Moving to 16GB RAM made the lab stable.
 - **Port conflicts are expected in honeypot labs.** Honeytrap occupying port `8000` was not a random issue. It was part of the honeypot attack surface.
 - **Honeytokens create higher-confidence alerts.** Raw honeypot hits show scanning volume, but token interaction suggests deeper attacker behavior.
-- **LLM enrichment is useful when bounded.** The classifier used structured output and ATT&CK mappings to turn raw events into analyst-ready summaries.
-- **Secrets review matters.** Screenshots, scripts, API keys, HEC tokens, and honeytoken values need to be checked before publishing.
-
-## What This Demonstrates
-
-End-to-end threat intelligence and automated incident response: live honeypot deployment, real attacker telemetry collection, Splunk SIEM ingestion, deception-based alerting, Python automation, LLM-assisted triage, and MITRE ATT&CK enrichment.
-
-The result is a small but complete SOC-style workflow: raw internet attacks come in, Splunk indexes them, the classifier enriches them, and the final events are written back as structured intelligence.
+- **LLM enrichment is useful when bounded.** The
